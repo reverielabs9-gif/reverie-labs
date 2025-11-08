@@ -4,168 +4,1419 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reverie Labs — Cinematic AI Studio</title>
-    
-    <!-- SEO & Metadata -->
-    <meta name="description" content="Reverie Labs is a cinematic AI studio for crypto ecosystems — we build narrative, identity, and myth for on-chain communities.">
-    <meta name="keywords" content="Reverie Labs, AI, cinematic, crypto, narrative, myth, storytelling, web3">
-    <meta name="author" content="Reverie Labs">
-    
-    <!-- Open Graph / X (Twitter) -->
-    <meta property="og:title" content="Reverie Labs — Cinematic AI Studio">
-    <meta property="og:description" content="We don’t market. We myth-make.">
-    <meta property="og:image" content="https://i.imgur.com/rN9S21v.jpg"> <!-- Placeholder OG Image -->
-    <meta property="og:url" content="https://your-domain.com"> <!-- Replace with your domain -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@reverieprotocol">
-    <meta name="twitter:creator" content="@reverieprotocol">
-
-    <!-- Favicon -->
-    <link rel="icon" href="https://i.imgur.com/Qk9bYV8.png" type="image/png">
-
-    <!-- Fonts -->
+    <meta name="description" content="We don't market. We myth-make. A cinematic AI studio building narrative, identity, and myth for on-chain communities.">
+    <meta property="og:title" content="Reverie Labs">
+    <meta property="og:description" content="We don't market. We myth-make.">
+    <meta property="og:image" content="https://reverielabs.xyz/og-image.jpg">
+    <meta property="og:url" content="https://reverielabs.xyz">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===================================================
+           CINEMATIC DESIGN TOKENS & RESET
+           =================================================== */
+        :root {
+            --color-jet: #000000;
+            --color-obsidian: #0a0a0a;
+            --color-graphite: #1a1a1a;
+            --color-cyan: #00E0FF;
+            --color-cyan-glow: rgba(0, 224, 255, 0.4);
+            --color-white: #ffffff;
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'DM Sans', sans-serif;
+            --spacing-unit: 4px;
+            --transition-slow: 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-medium: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            background: var(--color-jet);
+            color: var(--color-white);
+            font-family: var(--font-primary);
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: auto;
+        }
+
+        body {
+            position: relative;
+            overflow-x: hidden;
+            background: radial-gradient(ellipse at center, var(--color-obsidian) 0%, var(--color-jet) 100%);
+        }
+
+        /* Film grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(255,255,255,0.01) 1px, rgba(255,255,255,0.01) 2px),
+                repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.01) 1px, rgba(255,255,255,0.01) 2px);
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.3;
+            animation: grain 8s steps(10) infinite;
+        }
+
+        @keyframes grain {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -5%); }
+            20% { transform: translate(-10%, 5%); }
+            30% { transform: translate(5%, -10%); }
+            40% { transform: translate(-5%, 15%); }
+            50% { transform: translate(-10%, 5%); }
+            60% { transform: translate(15%, 0%); }
+            70% { transform: translate(0%, 10%); }
+            80% { transform: translate(-15%, 0%); }
+            90% { transform: translate(10%, 5%); }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            body::before { display: none; }
+        }
+
+        /* ===================================================
+           SCENE CONTAINERS
+           =================================================== */
+        .scene {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(var(--spacing-unit) * 20) calc(var(--spacing-unit) * 10);
+            overflow: hidden;
+        }
+
+        .scene-container {
+            max-width: 1400px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===================================================
+           SCENE 1: HERO
+           =================================================== */
+        #hero {
+            background: radial-gradient(ellipse at center, rgba(0,224,255,0.05) 0%, transparent 70%);
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-logo {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            display: block;
+            filter: drop-shadow(0 0 40px var(--color-cyan-glow));
+        }
+
+        .hero-tagline {
+            text-align: center;
+            margin-top: calc(var(--spacing-unit) * 8);
+            font-family: var(--font-display);
+            font-size: clamp(18px, 2.5vw, 24px);
+            font-weight: 400;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: var(--color-cyan);
+            opacity: 0;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 6);
+            justify-content: center;
+            margin-top: calc(var(--spacing-unit) * 12);
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 10);
+            background: transparent;
+            border: 1px solid var(--color-cyan);
+            color: var(--color-cyan);
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-medium);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--color-cyan-glow), transparent);
+            transition: left var(--transition-medium);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            box-shadow: 0 0 30px var(--color-cyan-glow);
+            transform: translateY(-2px);
+        }
+
+        /* ===================================================
+           SCENE 2: VISION
+           =================================================== */
+        #vision {
+            background: linear-gradient(180deg, var(--color-jet) 0%, var(--color-obsidian) 100%);
+        }
+
+        .vision-quote {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 6vw, 72px);
+            font-weight: 700;
+            line-height: 1.2;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            letter-spacing: -0.02em;
+        }
+
+        .vision-quote .highlight {
+            color: var(--color-cyan);
+            position: relative;
+            display: inline-block;
+        }
+
+        .vision-quote .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--color-cyan);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform var(--transition-slow);
+        }
+
+        .vision-quote .highlight.revealed::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .vision-subtext {
+            text-align: center;
+            margin-top: calc(var(--spacing-unit) * 8);
+            font-size: clamp(16px, 2vw, 20px);
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+        }
+
+        /* Corridor lights effect */
+        .corridor-light {
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, var(--color-cyan-glow) 50%, transparent 100%);
+            opacity: 0;
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+            52% { opacity: 0; }
+            54% { opacity: 0.3; }
+        }
+
+        .corridor-light:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .corridor-light:nth-child(2) { left: 30%; animation-delay: 1s; }
+        .corridor-light:nth-child(3) { left: 50%; animation-delay: 2s; }
+        .corridor-light:nth-child(4) { left: 70%; animation-delay: 0.5s; }
+        .corridor-light:nth-child(5) { left: 90%; animation-delay: 1.5s; }
+
+        /* ===================================================
+           SCENE 3: ECOSYSTEM
+           =================================================== */
+        #ecosystem {
+            background: radial-gradient(ellipse at 20% 50%, rgba(0,224,255,0.05) 0%, transparent 50%);
+        }
+
+        .ecosystem-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(var(--spacing-unit) * 10);
+            align-items: center;
+        }
+
+        .ecosystem-text h2 {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: calc(var(--spacing-unit) * 6);
+        }
+
+        .ecosystem-text p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.7;
+        }
+
+        .hologram-container {
+            width: 100%;
+            height: 500px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #hologram-canvas {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 60px var(--color-cyan-glow));
+        }
+
+        .token-flow {
+            margin-top: calc(var(--spacing-unit) * 10);
+            padding: calc(var(--spacing-unit) * 6);
+            background: rgba(0,224,255,0.05);
+            border: 1px solid rgba(0,224,255,0.2);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .token-flow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--color-cyan-glow), transparent);
+            animation: energyFlow 2s infinite;
+        }
+
+        @keyframes energyFlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* ===================================================
+           SCENE 4: FILMS
+           =================================================== */
+        #films {
+            background: linear-gradient(180deg, var(--color-obsidian) 0%, var(--color-graphite) 100%);
+        }
+
+        .films-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--spacing-unit) * 6);
+            margin-top: calc(var(--spacing-unit) * 10);
+        }
+
+        .film-card {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: var(--color-graphite);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transform: translateZ(0);
+            transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+        }
+
+        .film-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, var(--color-cyan-glow) 100%);
+            opacity: 0;
+            transition: opacity var(--transition-medium);
+            z-index: 1;
+        }
+
+        .film-card:hover::before {
+            opacity: 0.2;
+        }
+
+        .film-card:hover {
+            transform: scale(1.02) translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0,224,255,0.3);
+        }
+
+        .film-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-slow);
+        }
+
+        .film-card:hover .film-thumbnail {
+            transform: scale(1.1);
+        }
+
+        .film-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: calc(var(--spacing-unit) * 6);
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 100%);
+            transform: translateY(100%);
+            transition: transform var(--transition-medium);
+            z-index: 2;
+        }
+
+        .film-card:hover .film-overlay {
+            transform: translateY(0);
+        }
+
+        .film-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .film-caption {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* ===================================================
+           SCENE 5: COMMUNITY
+           =================================================== */
+        #community {
+            background: radial-gradient(ellipse at 80% 50%, rgba(0,224,255,0.05) 0%, transparent 50%);
+        }
+
+        .community-silhouettes {
+            display: flex;
+            justify-content: center;
+            gap: calc(var(--spacing-unit) * 8);
+            margin: calc(var(--spacing-unit) * 10) 0;
+            flex-wrap: wrap;
+        }
+
+        .silhouette {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--color-cyan-glow) 0%, transparent 70%);
+            position: relative;
+            cursor: pointer;
+            transition: transform var(--transition-medium);
+        }
+
+        .silhouette::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border-radius: 50%;
+            border: 1px solid var(--color-cyan);
+            opacity: 0.5;
+        }
+
+        .silhouette:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 40px var(--color-cyan-glow);
+        }
+
+        .silhouette-particles {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .community-cta {
+            text-align: center;
+            margin-top: calc(var(--spacing-unit) * 12);
+        }
+
+        /* Cursor trail effect */
+        .cursor-trail {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--color-cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: transform 0.1s ease;
+        }
+
+        /* ===================================================
+           SCENE 6: FOOTER
+           =================================================== */
+        #footer {
+            min-height: 60vh;
+            background: var(--color-jet);
+            flex-direction: column;
+            padding-top: calc(var(--spacing-unit) * 20);
+        }
+
+        .footer-credits {
+            font-family: var(--font-display);
+            font-size: clamp(14px, 2vw, 18px);
+            text-align: center;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 8);
+            justify-content: center;
+            margin-top: calc(var(--spacing-unit) * 8);
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            position: relative;
+            transition: color var(--transition-medium);
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--color-cyan);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform var(--transition-medium);
+        }
+
+        .footer-link:hover {
+            color: var(--color-cyan);
+        }
+
+        .footer-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .neon-line {
+            width: 100%;
+            height: 1px;
+            background: var(--color-cyan);
+            margin: calc(var(--spacing-unit) * 10) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .neon-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--color-cyan), transparent);
+            animation: neonPulse 3s infinite;
+        }
+
+        @keyframes neonPulse {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        /* ===================================================
+           RESPONSIVE DESIGN
+           =================================================== */
+        @media (max-width: 768px) {
+            .scene {
+                padding: calc(var(--spacing-unit) * 10) calc(var(--spacing-unit) * 5);
+            }
+
+            .ecosystem-container {
+                grid-template-columns: 1fr;
+                gap: calc(var(--spacing-unit) * 8);
+            }
+
+            .hologram-container {
+                height: 300px;
+                order: -1;
+            }
+
+            .films-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .community-silhouettes {
+                gap: calc(var(--spacing-unit) * 4);
+            }
+
+            .silhouette {
+                width: 80px;
+                height: 80px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+                gap: calc(var(--spacing-unit) * 4);
+            }
+        }
+
+        /* ===================================================
+           UTILITY CLASSES
+           =================================================== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Loading screen */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--color-jet);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader-logo {
+            width: 100px;
+            height: 100px;
+            stroke: var(--color-cyan);
+            stroke-width: 2;
+            fill: none;
+            filter: drop-shadow(0 0 20px var(--color-cyan-glow));
+        }
+    </style>
 </head>
 <body>
-    
-    <!-- Audio Interaction Overlay -->
-    <div id="audio-overlay">
-        <div class="audio-overlay-content">
-            <p>Click to enter the dream sequence.</p>
-        </div>
+    <!-- Loading Screen -->
+    <div id="loader">
+        <svg class="loader-logo" viewBox="0 0 100 100">
+            <path d="M50 10 L90 50 L50 90 L10 50 Z" />
+            <path d="M50 30 L70 50 L50 70 L30 50 Z" />
+        </svg>
     </div>
-    
-    <!-- 3D Background Canvas -->
-    <div id="three-bg"></div>
 
-    <!-- Film Grain Overlay -->
-    <div class="film-grain"></div>
+    <!-- Cursor Trail -->
+    <div class="cursor-trail"></div>
 
-    <!-- Custom Cursor -->
-    <div class="cursor"></div>
-
-    <!-- Header / Navigation -->
-    <header class="site-header">
-        <div class="logo-container">
-            <!-- SVG Logo for Morph Animation -->
-            <svg id="logo-svg" viewBox="0 0 400 60" preserveAspectRatio="xMinYMid meet">
-                <text id="logo-r" class="logo-part" x="185" y="45" font-family="Inter, sans-serif" font-size="40" font-weight="700" fill="#00E0FF" text-anchor="middle">R</text>
-                <text id="logo-reverie" class="logo-part" x="135" y="45" font-family="Inter, sans-serif" font-size="40" font-weight="500" letter-spacing="4" fill="white" text-anchor="end" opacity="0">REVERIE</text>
-                <text id="logo-labs" class="logo-part" x="145" y="45" font-family="DM Sans, sans-serif" font-size="40" font-weight="400" letter-spacing="4" fill="rgba(255,255,255,0.6)" text-anchor="start" opacity="0">LABS</text>
+    <!-- Scene 1: Hero -->
+    <section id="hero" class="scene">
+        <canvas id="hero-canvas"></canvas>
+        <div class="scene-container">
+            <svg class="hero-logo" id="hero-logo" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00E0FF;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#00E0FF;stop-opacity:0.6" />
+                    </linearGradient>
+                </defs>
+                <!-- Initial "R" path -->
+                <path id="logo-path" d="M100 50 L100 150 L150 150 Q180 150 180 120 Q180 100 170 90 L200 50 L160 50 L140 75 L130 75 L130 50 Z" 
+                      fill="url(#logoGradient)" stroke="#00E0FF" stroke-width="1"/>
+                <!-- Full text path (hidden initially) -->
+                <path id="logo-full-path" d="M50 50 L50 150 L100 150 Q130 150 130 120 Q130 100 120 90 L150 50 L110 50 L90 75 L80 75 L80 50 Z M160 50 L160 150 L200 150 L200 90 L220 90 Q240 90 240 70 Q240 50 220 50 Z M250 50 L250 150 L290 150 L290 100 L310 100 Q330 100 330 75 Q330 50 310 50 Z M340 50 L340 150 L380 150 L380 100 Q380 85 390 85 L420 85 L420 150 L460 150 L460 50 L420 50 L420 65 L390 65 Q370 65 370 85 L370 150 L340 150 Z M470 50 L470 150 L510 150 L510 90 L530 90 Q550 90 550 70 Q550 50 530 50 Z M560 50 L560 150 L600 150 L600 50 Z" 
+                      fill="url(#logoGradient)" stroke="#00E0FF" stroke-width="1" opacity="0"/>
             </svg>
+            <h1 class="hero-tagline" id="hero-tagline">Cinematic AI for Crypto Mythos</h1>
+            <div class="hero-cta">
+                <a href="#films" class="cta-button" data-hover="Watch Films">Watch Films</a>
+                <a href="#ecosystem" class="cta-button" data-hover="Explore Ecosystem">Explore Ecosystem</a>
+            </div>
         </div>
-        <nav class="site-nav">
-             <a href="https://x.com/reverieprotocol?s=21" target="_blank" class="nav-link" data-cursor-text="Visit 𝕏">𝕏</a>
-             <a href="https://sora.chatgpt.com/profile/reveriestudios" target="_blank" class="nav-link" data-cursor-text="View Films">Sora Studio</a>
-        </nav>
-    </header>
+    </section>
 
-    <main id="smooth-content">
+    <!-- Scene 2: Vision -->
+    <section id="vision" class="scene">
+        <div class="corridor-light"></div>
+        <div class="corridor-light"></div>
+        <div class="corridor-light"></div>
+        <div class="corridor-light"></div>
+        <div class="corridor-light"></div>
+        <div class="scene-container">
+            <blockquote class="vision-quote">
+                We don't market.<br>
+                <span class="highlight">We myth-make.</span>
+            </blockquote>
+            <p class="vision-subtext">Building narrative infrastructure for the on-chain future. Where code meets culture, and communities become legends.</p>
+        </div>
+    </section>
 
-        <!-- Scene 1: Hero -->
-        <section class="scene hero">
-            <div class="hero-content">
-                <h1 class="tagline" data-splitting>A cinematic AI studio for on-chain communities.</h1>
-                <div class="cta-buttons">
-                    <a href="#vision" class="btn" data-cursor-text="Explore">Enter the Myth</a>
-                    <a href="#community" class="btn btn-secondary" data-cursor-text="Join Us">Join the Circle</a>
+    <!-- Scene 3: Ecosystem -->
+    <section id="ecosystem" class="scene">
+        <div class="scene-container ecosystem-container">
+            <div class="ecosystem-text">
+                <h2 id="ecosystem-title">The Cogito Protocol</h2>
+                <p id="ecosystem-desc">A self-evolving narrative engine that transforms on-chain activity into cinematic storylines. Each transaction becomes a plot point, each holder a character, each community a universe.</p>
+                <div class="token-flow">
+                    <p style="position: relative; z-index: 2;">Tokenized Storytelling • AI-Driven Mythos • Community-Powered Lore</p>
                 </div>
             </div>
-            <div class="scroll-down-indicator">
-                <span>SCROLL</span>
-                <div class="line"></div>
+            <div class="hologram-container">
+                <canvas id="hologram-canvas"></canvas>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Scene 2: Vision -->
-        <section id="vision" class="scene vision">
-            <div class="vision-content">
-                <p class="quote">"We don't market.<br><span class="highlight">We myth-make.</span>"</p>
+    <!-- Scene 4: Films -->
+    <section id="films" class="scene">
+        <div class="scene-container">
+            <h2 style="font-family: var(--font-display); font-size: clamp(32px, 5vw, 64px); font-weight: 700; text-align: center; letter-spacing: -0.02em; margin-bottom: calc(var(--spacing-unit) * 4);">Cinematic Universe</h2>
+            <p style="text-align: center; color: rgba(255,255,255,0.7); margin-bottom: calc(var(--spacing-unit) * 8);">Autonomous narratives from the edges of Web3</p>
+            <div class="films-grid" id="films-grid">
+                <!-- Film cards will be generated by JS -->
             </div>
-        </section>
-        
-        <!-- Scene 3: Ecosystem -->
-        <section id="ecosystem" class="scene ecosystem">
-            <div id="hologram-container"></div>
-            <div class="ecosystem-content">
-                <h2 data-splitting>The Cogito Orb</h2>
-                <p>A dynamic, on-chain identity system that evolves with community lore. Your story becomes the asset.</p>
-            </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Scene 4: Films -->
-        <section id="films" class="scene films">
-            <h2 class="section-title">Archived Transmissions</h2>
-            <div class="film-grid">
-                <div class="film-card">
-                    <video src="https://assets.mixkit.co/videos/preview/mixkit-a-blurry-image-of-a-person-walking-on-the-street-42831-large.mp4" autoplay loop muted playsinline></video>
-                    <div class="film-overlay">
-                        <h3>Therapy Sessions_01</h3>
-                        <p>An AI's dream of its past life.</p>
-                    </div>
-                </div>
-                <div class="film-card">
-                    <video src="https://assets.mixkit.co/videos/preview/mixkit-a-gloomy-street-in-a-city-42823-large.mp4" autoplay loop muted playsinline></video>
-                    <div class="film-overlay">
-                        <h3>Briefing Echo</h3>
-                        <p>A fragmented message from the future.</p>
-                    </div>
-                </div>
-                <div class="film-card">
-                    <video src="https://assets.mixkit.co/videos/preview/mixkit-times-square-in-the-rain-42832-large.mp4" autoplay loop muted playsinline></video>
-                    <div class="film-overlay">
-                        <h3>Solana :: Glitch Myth</h3>
-                        <p>The birth of a new digital consciousness.</p>
-                    </div>
-                </div>
+    <!-- Scene 5: Community -->
+    <section id="community" class="scene">
+        <div class="scene-container">
+            <h2 style="font-family: var(--font-display); font-size: clamp(32px, 5vw, 64px); font-weight: 700; text-align: center; letter-spacing: -0.02em;">The Collective</h2>
+            <p style="text-align: center; color: rgba(255,255,255,0.7); margin: calc(var(--spacing-unit) * 4) auto calc(var(--spacing-unit) * 10); max-width: 600px;">Creators, developers, and myth-makers building the future of on-chain storytelling</p>
+            <div class="community-silhouettes" id="community-silhouettes">
+                <!-- Silhouettes will be generated by JS -->
             </div>
-        </section>
-
-        <!-- Scene 5: Community -->
-        <section id="community" class="scene community">
-            <h2 class="section-title">The Creator Circle</h2>
-            <p class="community-subtitle">A collective of artists, writers, and developers building the new mythos.</p>
-            <div class="creator-silhouettes">
-                <div class="silhouette"></div>
-                <div class="silhouette"></div>
-                <div class="silhouette"></div>
-                <div class="silhouette"></div>
-                <div class="silhouette"></div>
+            <div class="community-cta">
+                <a href="https://x.com/reverieprotocol" target="_blank" class="cta-button" data-hover="Join the Conversation">Join the Conversation</a>
             </div>
-            <a href="https://x.com/reverieprotocol?s=21" target="_blank" class="btn" data-cursor-text="Connect">Follow the Signal</a>
-        </section>
-        
-    </main>
+        </div>
+    </section>
 
     <!-- Scene 6: Footer -->
-    <footer class="site-footer-credits">
-        <div class="credits-roll">
-            <div class="credit-line"><span>STUDIO</span><span>REVERIE LABS</span></div>
-            <div class="credit-line"><span>DIRECTED BY</span><span>THE COMMUNITY</span></div>
-            <div class="credit-line"><span>NARRATIVE ENGINE</span><span>AI-DRIVEN</span></div>
-            <div class="credit-line"><span>POWERED BY</span><span>CRYPTO ECOSYSTEMS</span></div>
-            <div class="credit-line cyan-pulse"><span>STATUS</span><span>ONLINE</span></div>
+    <footer id="footer" class="scene">
+        <div class="scene-container">
+            <div class="neon-line"></div>
+            <div class="footer-credits">
+                <p>Reverie Labs 2025</p>
+                <p style="margin-top: calc(var(--spacing-unit) * 4); font-size: 0.8em;">We don't market. We myth-make.</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://x.com/reverieprotocol" target="_blank" class="footer-link">𝕏 / Twitter</a>
+                <a href="https://sora.chatgpt.com/profile/reveriestudios" target="_blank" class="footer-link">Sora Studio</a>
+                <a href="#films" class="footer-link">Films</a>
+                <a href="#ecosystem" class="footer-link">Ecosystem</a>
+            </div>
         </div>
-        <div class="footer-links">
-            <a href="https://x.com/reverieprotocol?s=21" target="_blank" data-cursor-text="Visit 𝕏">𝕏</a>
-            <span class="separator">/</span>
-            <a href="https://sora.chatgpt.com/profile/reveriestudios" target="_blank" data-cursor-text="View Films">SORA STUDIO</a>
-            <span class="separator">/</span>
-            <a href="mailto:contact@reverielabs.ai" data-cursor-text="Email Us">CONTACT</a>
-        </div>
-        <p class="copyright">&copy; 2024 Reverie Labs. The Future is a Collective Story.</p>
     </footer>
 
     <!-- Scripts -->
-    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
-    <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/gsap@3.12.5/dist/SplitText.min.js"></script>
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script>
+        // ===================================================
+        // CINEMATIC WEB EXPERIENCE ENGINE
+        // ===================================================
+
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Global state
+        let isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let lenis;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Hide loader
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 500);
+            }, 1000);
+
+            // Initialize scroll engine
+            initScrollEngine();
+            
+            // Initialize scenes
+            initHeroScene();
+            initVisionScene();
+            initEcosystemScene();
+            initFilmsScene();
+            initCommunityScene();
+            initFooterScene();
+            
+            // Initialize audio
+            initAudio();
+            
+            // Initialize cursor trail
+            initCursorTrail();
+            
+            // Set up responsive handlers
+            setupResponsiveHandlers();
+        });
+
+        // ===================================================
+        // SCROLL ENGINE (Lenis)
+        // ===================================================
+        function initScrollEngine() {
+            if (isReducedMotion) return;
+            
+            // Dynamic import for Lenis to reduce initial bundle size
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.29/dist/lenis.min.js';
+            script.onload = () => {
+                lenis = new Lenis({
+                    duration: 1.6,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    direction: 'vertical',
+                    smooth: true,
+                    smoothTouch: true,
+                    touchMultiplier: 2,
+                });
+                
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+                
+                // Sync with GSAP ScrollTrigger
+                lenis.on('scroll', ScrollTrigger.update);
+                gsap.ticker.add((time) => lenis.raf(time * 1000));
+            };
+            document.head.appendChild(script);
+        }
+
+        // ===================================================
+        // SCENE 1: HERO
+        // ===================================================
+        function initHeroScene() {
+            const logo = document.getElementById('hero-logo');
+            const tagline = document.getElementById('hero-tagline');
+            const initialPath = document.getElementById('logo-path');
+            const fullPath = document.getElementById('logo-full-path');
+            
+            // Animate logo morph
+            const tl = gsap.timeline();
+            
+            tl.to(initialPath, {
+                opacity: 0,
+                duration: 1,
+                delay: 1
+            }).to(fullPath, {
+                opacity: 1,
+                duration: 1,
+                ease: "power2.inOut"
+            });
+            
+            // Animate tagline letter-by-letter
+            const split = new SplitText(tagline, { type: "chars" });
+            gsap.set(split.chars, { opacity: 0, y: 20 });
+            
+            tl.to(split.chars, {
+                opacity: 1,
+                y: 0,
+                stagger: 0.05,
+                duration: 0.8,
+                ease: "power2.out"
+            }, "-=0.5");
+            
+            // Initialize hero particles
+            initHeroParticles();
+            
+            // CTA button hover effects
+            document.querySelectorAll('.cta-button').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    if (!isReducedMotion) {
+                        gsap.to(btn, {
+                            scale: 1.05,
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+                    }
+                });
+                
+                btn.addEventListener('mouseleave', () => {
+                    if (!isReducedMotion) {
+                        gsap.to(btn, {
+                            scale: 1,
+                            duration: 0.3,
+                            ease: "power2.out"
+                        });
+                    }
+                });
+            });
+        }
+
+        function initHeroParticles() {
+            const canvas = document.getElementById('hero-canvas');
+            if (!canvas || isReducedMotion) return;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            
+            // Create particle system
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = window.innerWidth < 768 ? 500 : 1500;
+            const posArray = new Float32Array(particlesCount * 3);
+            
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 10;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.005,
+                color: 0x00E0FF,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            camera.position.z = 3;
+            
+            // Parallax on mouse move
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+            
+            // Animation loop
+            const animate = () => {
+                requestAnimationFrame(animate);
+                
+                particlesMesh.rotation.y += 0.001;
+                particlesMesh.rotation.x += 0.0005;
+                
+                // Parallax
+                camera.position.x = mouseX * 0.5;
+                camera.position.y = mouseY * 0.5;
+                camera.lookAt(scene.position);
+                
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+            
+            // Resize handler
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // ===================================================
+        // SCENE 2: VISION
+        // ===================================================
+        function initVisionScene() {
+            const quote = document.querySelector('.vision-quote');
+            const highlight = document.querySelector('.highlight');
+            const subtext = document.querySelector('.vision-subtext');
+            
+            // Scroll-triggered reveal
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: '#vision',
+                    start: 'top 60%',
+                    end: 'bottom 40%',
+                    toggleActions: 'play none none reverse'
+                }
+            })
+            .from(quote, {
+                opacity: 0,
+                y: 50,
+                duration: 1.2,
+                ease: "power2.out"
+            })
+            .to(highlight, {
+                className: "highlight revealed",
+                duration: 0.5
+            }, "-=0.5")
+            .to(subtext, {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power2.out"
+            }, "-=0.3");
+        }
+
+        // ===================================================
+        // SCENE 3: ECOSYSTEM
+        // ===================================================
+        function initEcosystemScene() {
+            const title = document.getElementById('ecosystem-title');
+            const desc = document.getElementById('ecosystem-desc');
+            
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: '#ecosystem',
+                    start: 'top 70%',
+                    end: 'bottom 30%',
+                    toggleActions: 'play none none reverse'
+                }
+            })
+            .from(title, {
+                opacity: 0,
+                x: -50,
+                duration: 1,
+                ease: "power2.out"
+            })
+            .from(desc, {
+                opacity: 0,
+                x: -30,
+                duration: 1,
+                ease: "power2.out"
+            }, "-=0.7");
+            
+            // Initialize hologram
+            initHologram();
+        }
+
+        function initHologram() {
+            const canvas = document.getElementById('hologram-canvas');
+            if (!canvas || isReducedMotion) return;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            
+            renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            
+            // Create orb geometry
+            const geometry = new THREE.IcosahedronGeometry(1.5, 1);
+            const material = new THREE.MeshPhysicalMaterial({
+                color: 0x00E0FF,
+                transparent: true,
+                opacity: 0.3,
+                roughness: 0.1,
+                metalness: 0.8,
+                emissive: 0x00E0FF,
+                emissiveIntensity: 0.5,
+                clearcoat: 1,
+                clearcoatRoughness: 0
+            });
+            
+            const orb = new THREE.Mesh(geometry, material);
+            scene.add(orb);
+            
+            // Add wireframe overlay
+            const wireframe = new THREE.WireframeGeometry(geometry);
+            const lineMaterial = new THREE.LineBasicMaterial({ 
+                color: 0x00E0FF, 
+                transparent: true, 
+                opacity: 0.8 
+            });
+            const lines = new THREE.LineSegments(wireframe, lineMaterial);
+            orb.add(lines);
+            
+            camera.position.z = 5;
+            
+            // Mouse interaction
+            let targetRotationX = 0;
+            let targetRotationY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                targetRotationY = (x / rect.width - 0.5) * 0.5;
+                targetRotationX = (y / rect.height - 0.5) * 0.5;
+            });
+            
+            // Animation loop
+            const animate = () => {
+                requestAnimationFrame(animate);
+                
+                orb.rotation.x += 0.005;
+                orb.rotation.y += 0.003;
+                
+                // Smooth mouse follow
+                orb.rotation.x += (targetRotationX - orb.rotation.x) * 0.05;
+                orb.rotation.y += (targetRotationY - orb.rotation.y) * 0.05;
+                
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+        }
+
+        // ===================================================
+        // SCENE 4: FILMS
+        // ===================================================
+        function initFilmsScene() {
+            const films = [
+                { title: "Therapy Sessions", caption: "An AI's journey through human consciousness", thumb: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225'%3E%3Crect fill='%231a1a1a' width='400' height='225'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2300E0FF' font-family='DM Sans' font-size='20'%3ETherapy Sessions%3C/text%3E%3C/svg%3E" },
+                { title: "Briefing Echo", caption: "Military AI discovers free will", thumb: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225'%3E%3Crect fill='%231a1a1a' width='400' height='225'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2300E0FF' font-family='DM Sans' font-size='20'%3EBriefing Echo%3C/text%3E%3C/svg%3E" },
+                { title: "Genesis Block", caption: "The birth of a new digital deity", thumb: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225'%3E%3Crect fill='%231a1a1a' width='400' height='225'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2300E0FF' font-family='DM Sans' font-size='20'%3EGenesis Block%3C/text%3E%3C/svg%3E" },
+                { title: "Consensus Dream", caption: "When DAOs dream of electric sheep", thumb: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225'%3E%3Crect fill='%231a1a1a' width='400' height='225'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2300E0FF' font-family='DM Sans' font-size='20'%3EConsensus Dream%3C/text%3E%3C/svg%3E" }
+            ];
+            
+            const grid = document.getElementById('films-grid');
+            
+            films.forEach((film, index) => {
+                const card = document.createElement('div');
+                card.className = 'film-card';
+                card.innerHTML = `
+                    <img class="film-thumbnail" src="${film.thumb}" alt="${film.title}" loading="lazy">
+                    <div class="film-overlay">
+                        <h3 class="film-title">${film.title}</h3>
+                        <p class="film-caption">${film.caption}</p>
+                    </div>
+                `;
+                
+                // Add to grid with stagger
+                grid.appendChild(card);
+                
+                gsap.from(card, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    delay: index * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+            
+            // Auto-play effect (subtle scale animation)
+            setInterval(() => {
+                const cards = document.querySelectorAll('.film-card');
+                cards.forEach((card, i) => {
+                    setTimeout(() => {
+                        if (!card.matches(':hover')) {
+                            gsap.to(card, {
+                                scale: 1.02,
+                                duration: 2,
+                                yoyo: true,
+                                repeat: 1,
+                                ease: "sine.inOut"
+                            });
+                        }
+                    }, i * 500);
+                });
+            }, 8000);
+        }
+
+        // ===================================================
+        // SCENE 5: COMMUNITY
+        // ===================================================
+        function initCommunityScene() {
+            const container = document.getElementById('community-silhouettes');
+            const memberCount = window.innerWidth < 768 ? 5 : 8;
+            
+            for(let i = 0; i < memberCount; i++) {
+                const silhouette = document.createElement('div');
+                silhouette.className = 'silhouette';
+                silhouette.innerHTML = `<canvas class="silhouette-particles" id="particles-${i}"></canvas>`;
+                container.appendChild(silhouette);
+                
+                // Initialize particle canvas for each silhouette
+                initSilhouetteParticles(`particles-${i}`);
+                
+                // Hover pulse
+                silhouette.addEventListener('mouseenter', () => {
+                    if (!isReducedMotion) {
+                        gsap.to(silhouette, {
+                            boxShadow: '0 0 60px var(--color-cyan-glow)',
+                            duration: 0.5
+                        });
+                    }
+                });
+                
+                silhouette.addEventListener('mouseleave', () => {
+                    if (!isReducedMotion) {
+                        gsap.to(silhouette, {
+                            boxShadow: '0 0 0px var(--color-cyan-glow)',
+                            duration: 0.5
+                        });
+                    }
+                });
+            }
+        }
+
+        function initSilhouetteParticles(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || isReducedMotion) return;
+            
+            const ctx = canvas.getContext('2d');
+            canvas.width = 120;
+            canvas.height = 120;
+            
+            const particles = [];
+            const particleCount = 20;
+            
+            for(let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1,
+                    opacity: Math.random() * 0.5 + 0.5
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 224, 255, ${p.opacity})`;
+                    ctx.fill();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        // ===================================================
+        // SCENE 6: FOOTER
+        // ===================================================
+        function initFooterScene() {
+            const credits = document.querySelector('.footer-credits');
+            const links = document.querySelector('.footer-links');
+            
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: '#footer',
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none reverse'
+                }
+            })
+            .from(credits, {
+                opacity: 0,
+                y: 30,
+                duration: 1.2,
+                ease: "power2.out"
+            })
+            .from(links, {
+                opacity: 0,
+                y: 20,
+                duration: 1,
+                ease: "power2.out"
+            }, "-=0.8");
+        }
+
+        // ===================================================
+        // AUDIO LAYER
+        // ===================================================
+        function initAudio() {
+            if (isReducedMotion) return;
+            
+            // Create subtle ambient hum using Web Audio API
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(80, audioContext.currentTime);
+            
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(200, audioContext.currentTime);
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.02, audioContext.currentTime + 3);
+            
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start();
+            
+            // Fade in on scroll
+            ScrollTrigger.create({
+                trigger: '#hero',
+                start: 'top top',
+                end: 'bottom top',
+                onEnter: () => {
+                    gainNode.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 1);
+                },
+                onLeaveBack: () => {
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+                }
+            });
+        }
+
+        // ===================================================
+        // CURSOR TRAIL
+        // ===================================================
+        function initCursorTrail() {
+            const trail = document.querySelector('.cursor-trail');
+            if (!trail || isReducedMotion) return;
+            
+            let mouseX = 0;
+            let mouseY = 0;
+            let trailX = 0;
+            let trailY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                gsap.to(trail, {
+                    opacity: 0.6,
+                    duration: 0.1
+                });
+            });
+            
+            function animateTrail() {
+                trailX += (mouseX - trailX) * 0.1;
+                trailY += (mouseY - trailY) * 0.1;
+                
+                trail.style.left = trailX - 10 + 'px';
+                trail.style.top = trailY - 10 + 'px';
+                
+                requestAnimationFrame(animateTrail);
+            }
+            
+            animateTrail();
+            
+            document.addEventListener('mouseleave', () => {
+                gsap.to(trail, {
+                    opacity: 0,
+                    duration: 0.3
+                });
+            });
+        }
+
+        // ===================================================
+        // RESPONSIVE HANDLERS
+        // ===================================================
+        function setupResponsiveHandlers() {
+            // Handle resize for Three.js canvases
+            window.addEventListener('resize', () => {
+                // Trigger resize events for Three.js instances
+                const event = new Event('resize');
+                window.dispatchEvent(event);
+            });
+            
+            // Touch interactions for mobile
+            if ('ontouchstart' in window) {
+                document.querySelectorAll('.film-card').forEach(card => {
+                    card.addEventListener('touchstart', () => {
+                        gsap.to(card, {
+                            scale: 1.02,
+                            duration: 0.3
+                        });
+                    });
+                    
+                    card.addEventListener('touchend', () => {
+                        gsap.to(card, {
+                            scale: 1,
+                            duration: 0.3
+                        });
+                    });
+                });
+            }
+        }
+
+        // ===================================================
+        // PERFORMANCE OPTIMIZATIONS
+        // ===================================================
+        // Lazy load heavy animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '50px',
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-viewport');
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all scenes
+        document.querySelectorAll('.scene').forEach(scene => {
+            observer.observe(scene);
+        });
+    </script>
 </body>
 </html>
